@@ -1,13 +1,18 @@
 package cl.ucn.felix.biblioteca.servicio.api;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
+import cl.ucn.felix.biblioteca.api.ExcepcionLibroExistente;
+import cl.ucn.felix.biblioteca.api.ExcepcionLibroInvalido;
 import cl.ucn.felix.biblioteca.api.ExcepcionLibroNoEncontrado;
 import cl.ucn.felix.biblioteca.api.Inventario;
+import cl.ucn.felix.biblioteca.api.Inventario.CriterioBusqueda;
 import cl.ucn.felix.biblioteca.api.Libro;
+import cl.ucn.felix.biblioteca.api.LibroMutable;
 
 public class ServicioInventarioLibroImpl implements ServicioInventarioLibro{
 
@@ -60,21 +65,33 @@ public class ServicioInventarioLibroImpl implements ServicioInventarioLibro{
 	}
 
 	@Override
-	public void adicionarLibro(String sesion, String isbn, String titulo, String autor, String categoria) {
+	public void adicionarLibro(String sesion, String isbn, String titulo, String autor, String categoria) throws ExcepcionSesionNoValidaTiempoEjecucion, ExcepcionLibroExistente, ExcepcionLibroInvalido {
 		// TODO Auto-generated method stub
-		
+		this.chequearSesion(sesion);
+		Inventario servicio = buscarLibroEnInventario();
+		LibroMutable libro = servicio.crearLibro(isbn);
+		libro.setAutor(autor);
+		libro.setTitulo(titulo);
+		libro.setCategoria(categoria);
+		servicio.guardarLibro(libro);
 	}
 
 	@Override
-	public void modificarCategoriaLibro(String sesion, String isbn, String categoria) {
+	public void modificarCategoriaLibro(String sesion, String isbn, String categoria) throws ExcepcionSesionNoValidaTiempoEjecucion, ExcepcionLibroNoEncontrado, ExcepcionLibroInvalido {
 		// TODO Auto-generated method stub
-		
+		this.chequearSesion(sesion);
+		Inventario inventario = buscarLibroEnInventario();
+		LibroMutable libro = inventario.cargarLibroParaEdicion(isbn);
+		libro.setCategoria(categoria);
+		inventario.guardarLibro(libro);
 	}
 
 	@Override
-	public void removerLibro(String sesion, String isbn) {
+	public void removerLibro(String sesion, String isbn) throws ExcepcionSesionNoValidaTiempoEjecucion, ExcepcionLibroNoEncontrado {
 		// TODO Auto-generated method stub
-		
+		this.chequearSesion(sesion);
+		Inventario inventario = buscarLibroEnInventario();
+		inventario.removerLibro(isbn);
 	}
 
 	@Override
@@ -86,21 +103,27 @@ public class ServicioInventarioLibroImpl implements ServicioInventarioLibro{
 	}
 
 	@Override
-	public Set<String> buscarLibrosPorCategoria(String sesion, String categoriaLike) {
+	public Set<String> buscarLibrosPorCategoria(String sesion, String categoriaLike) throws ExcepcionSesionNoValidaTiempoEjecucion {
 		// TODO Auto-generated method stub
-		return null;
+		this.chequearSesion(sesion);
+		Inventario inventario = buscarLibroEnInventario();
+		return inventario.buscarLibros(Map.of(CriterioBusqueda.CATEGORIA_LIKE, categoriaLike));
 	}
 
 	@Override
-	public Set<String> buscarLibrosPorAutor(String session, String autorLike) {
+	public Set<String> buscarLibrosPorAutor(String session, String autorLike) throws ExcepcionSesionNoValidaTiempoEjecucion {
 		// TODO Auto-generated method stub
-		return null;
+		this.chequearSesion(sesion);
+		Inventario inventario = buscarLibroEnInventario();
+		return inventario.buscarLibros(Map.of(CriterioBusqueda.AUTOR_LIKE, autorLike));
 	}
 
 	@Override
-	public Set<String> buscarLibrosPorTitulo(String sesion, String tituloLike) {
+	public Set<String> buscarLibrosPorTitulo(String sesion, String tituloLike) throws ExcepcionSesionNoValidaTiempoEjecucion {
 		// TODO Auto-generated method stub
-		return null;
+		this.chequearSesion(sesion);
+		Inventario inventario = buscarLibroEnInventario();
+		return inventario.buscarLibros(Map.of(CriterioBusqueda.TITULO_LIKE, tituloLike));
 	}
 
 	private Inventario buscarLibroEnInventario() throws ExcepcionSesionNoValidaTiempoEjecucion {
