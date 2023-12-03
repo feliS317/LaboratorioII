@@ -18,13 +18,12 @@ public class ServicioInventarioLibroImpl implements ServicioInventarioLibro{
 
 	private String sesion;
 	private BundleContext contexto;
-	
+
 	
 	public ServicioInventarioLibroImpl(BundleContext contexto) {
 		
 		this.contexto = contexto;
 	}
-
 		
 	@Override
 	public String login(String username, String password) throws ExcepcionCredencialInvalida {
@@ -58,10 +57,11 @@ public class ServicioInventarioLibroImpl implements ServicioInventarioLibro{
 	}
 
 	@Override
-	public Set<String> obtenerGrupos(String sesion)  {
+	public Set<String> obtenerGrupos(String sesion) throws ExcepcionSesionNoValidaTiempoEjecucion  {
 		// TODO Auto-generated method stub
-		return null;
-		
+		this.chequearSesion(sesion);
+		Inventario servicio = buscarLibroEnInventario();
+		return servicio.getCategorias();
 	}
 
 	@Override

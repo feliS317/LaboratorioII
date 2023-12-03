@@ -9,7 +9,7 @@ import cl.ucn.felix.biblioteca.api.Libro;
 
 public interface ServicioInventarioLibro extends Autenticacion{
 
-	Set<String> obtenerGrupos(String sesion);
+	Set<String> obtenerGrupos(String sesion) throws ExcepcionSesionNoValidaTiempoEjecucion;
 	void adicionarLibro(String sesion, String isbn, String titulo, String autor, String categoria) throws ExcepcionLibroExistente, ExcepcionLibroInvalido, ExcepcionSesionNoValidaTiempoEjecucion;
 	void modificarCategoriaLibro(String sesion, String isbn, String categoria) throws ExcepcionLibroNoEncontrado, ExcepcionLibroInvalido, ExcepcionSesionNoValidaTiempoEjecucion;
 	void removerLibro(String sesion, String isbn) throws ExcepcionLibroNoEncontrado, ExcepcionSesionNoValidaTiempoEjecucion;

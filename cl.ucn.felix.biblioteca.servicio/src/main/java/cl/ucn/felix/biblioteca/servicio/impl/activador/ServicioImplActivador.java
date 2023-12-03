@@ -17,16 +17,16 @@ public class ServicioImplActivador  implements BundleActivator {
 	public void start(BundleContext context) throws Exception {
 		// TODO Auto-generated method stub
 		Hashtable<String, Object> props = new Hashtable<String, Object>();
-		//props.put("osgi.command.scope", cl.ucn.felix.biblioteca.servicio.api.ServicioInventarioLibroImpl.AMBITO);
-		//props.put("osgi.command.function",cl.ucn.felix.biblioteca.servicio.api.ServicioInventarioLibroImpl.FUNCIONES);
 		ServicioInventarioLibro servicioInventarioLibro = new ServicioInventarioLibroImpl(context);
-		context.registerService(ServicioInventarioLibro.class.getName(),servicioInventarioLibro, props);
+		reg = (ServiceRegistration<ServicioInventarioLibro>) context.registerService(ServicioInventarioLibro.class.getName(),servicioInventarioLibro, props);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		// TODO Auto-generated method stub
-		
+		if(reg != null) {
+			reg.unregister();
+		}
 	}
 
 }
