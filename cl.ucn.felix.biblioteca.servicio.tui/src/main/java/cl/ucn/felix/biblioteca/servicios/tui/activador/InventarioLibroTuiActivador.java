@@ -13,6 +13,7 @@ public class InventarioLibroTuiActivador implements BundleActivator {
 	public void start(BundleContext contexto) throws Exception {
 		// TODO Auto-generated method stub
 		Hashtable<String, Object> props = new Hashtable<String, Object>();
+		props.put("osgi.command.scope",cl.ucn.felix.biblioteca.servicios.tui.ServicioInventarioProxy.AMBITO);
 		props.put("osgi.command.function",cl.ucn.felix.biblioteca.servicios.tui.ServicioInventarioProxy.FUNCIONES);
 		ServicioInventarioProxy servicioInventatrioProxy = new ServicioInventarioProxy(contexto);
 		contexto.registerService(ServicioInventarioProxy.class.getName(),servicioInventatrioProxy, props);
